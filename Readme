@@ -6,7 +6,7 @@ https://img.shields.io/badge/Cucumber-BDD-brightgreen
 https://img.shields.io/badge/Maven-Build%2520Tool-orange
 https://img.shields.io/badge/WebDriverManager-5.6.0-lightgrey
 
-A professional test automation framework for e-commerce applications built with Java, Selenium, TestNG, and Cucumber following industry best practices.
+A test automation framework for e-commerce applications built with Java, Selenium, TestNG, and Cucumber following industry best practices.
 
 🌐 Application Under Test
 URL: https://www.saucedemo.com/
@@ -40,49 +40,6 @@ TestNG	7.8.0	Test framework
 Cucumber	7.14.0	BDD implementation
 WebDriverManager	5.6.0	Automated driver management
 Maven	3.6+	Build automation
-🏗️ Project Structure
-text
-src/test/
-├── java/
-│   ├── pageObjects/          # Page classes following POM
-│   │   ├── LoginPage.java
-│   │   ├── ProductsPage.java
-│   │   └── CartPage.java
-│   ├── stepDefinitions/      # Cucumber step definitions
-│   │   └── AddToCartSteps.java
-│   ├── testCases/           # Test classes
-│   │   ├── LoginTest.java
-│   │   └── TestRunner.java
-│   └── utilities/           # Helper classes
-│       └── TestListener.java
-└── resources/
-    └── features/            # Cucumber feature files
-        └── AddToCart.feature
-⚙️ Installation & Setup
-1. Prerequisites
-Java JDK 11 or higher
-
-Maven 3.6 or higher
-
-Chrome browser (default) or other supported browsers
-
-2. Clone and Install
-bash
-git clone <your-repo-url>
-cd SeleniumCraft
-mvn clean install
-🧪 Running Tests
-Run all tests
-bash
-mvn test
-Run only Login tests
-bash
-mvn test -Dtest=LoginTest
-Run Cucumber tests
-bash
-mvn test -Dtest=TestRunner
-Run with specific browser
-Modify the browser in the @BeforeMethod setup (default is Chrome).
 
 📊 Test Cases
 Successful Login - Valid credentials authentication
