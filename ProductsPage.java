@@ -1,36 +1,38 @@
 package PageObject;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
-public class ProductsPage {
-    WebDriver driver;
-    
-    @FindBy(className = "title")
-    WebElement pageTitle;
-    
-    @FindBy(id = "add-to-cart-sauce-labs-backpack")
-    WebElement addBackpackToCart;
-    
-    @FindBy(className = "shopping_cart_badge")
-    WebElement cartBadge;
-    
+import Pages.BasePage;
+
+public class ProductsPage extends BasePage {
+
+    private By pageTitle = By.cssSelector("span.title");
+    private By cartIcon = By.className("shopping_cart_link");
     public ProductsPage(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
-    
-    public String getPageTitle() {
-        return pageTitle.getText();
+
+    public boolean isOnProductsPage() {
+        return getText(pageTitle).equalsIgnoreCase("Products");
     }
-    
-    public void addBackpackToCart() {
-        addBackpackToCart.click();
+
+    private String getText(By pageTitle2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void addToCart(String productName) {
+        By addBtn = By.xpath("//div[text()='" + productName + "']/ancestor::div[@class='inventory_item']//button");
+        click(addBtn);
     }
-    
-    public String getCartItemCount() {
-        return cartBadge.getText();
+
+    private void click(By addBtn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void goToCart() {
+        click(cartIcon);
     }
 }

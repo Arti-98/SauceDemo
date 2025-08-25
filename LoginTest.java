@@ -1,53 +1,37 @@
 package TestCases;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import BStackDemo.LoginPage;
-import Project.Login;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import PageObject.ProductsPage;
+import net.bytebuddy.asm.Advice.AssignReturned.Factory;
 
-public class LoginTest {
-    WebDriver driver;
-    LoginPage loginPage;
-    
-    @BeforeMethod
-    public void setup() {
-        WebDriverManager.chromedriver().setup();
-        driver = (WebDriver) new ChromeDriver();
-        driver.manage().window().maximize();
-        ((WebDriver) driver).get("https://www.saucedemo.com/");
-        loginPage = new LoginPage(driver);
-    }
-    
-    @Test
-    public void testSuccessfulLogin() {
-        ((LoginPage) loginPage).loginToApplication("standard_user", "secret_sauce");
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.saucedemo.com/inventory.html");
-    }
-    
-    @Test(dataProvider = "invalidCredentials")
-    public void testInvalidLogin(String username, String password) {
-        loginPage.loginToApplication(username, password);
-        Assert.assertTrue(((LoginPage) loginPage).getErrorMessage().contains("Username and password do not match"));
-    }
-    
-    @DataProvider
-    public Object[][] invalidCredentials() {
-        return new Object[][] {
-            {"wrong_user", "secret_sauce"},
-            {"standard_user", "wrong_password"},
-            {"", "secret_sauce"},
-            {"standard_user", ""}
+public class LoginTest extends Factory {
+
+    @DataProvider(name = "users")
+    public Object[][] users() {
+        return new Object[][]{
+                {"standard_user", "secret_sauce", true},
+                {"locked_out_user", "secret_sauce", false},
+                {"problem_user", "secret_sauce", true}
         };
     }
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
+
+    @Test(dataProvider = "users")
+    public void testLogin(String username, String password, boolean expectedSuccess) {
+        WebDriver driver = null;
+		LoginPage login = new LoginPage(driver);
+        (login).open();
+         (login).login(username, password);
+
+        if (expectedSuccess) {
+            ProductsPage products = new ProductsPage(driver);
+            Assert.assertTrue(products.isOnProductsPage(), "Login should succeed for: " + username);
+        } else {
+            Assert.assertTrue(login.isErrorDisplayed(), "Error should display for: " + username);
+        }
     }
 }

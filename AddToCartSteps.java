@@ -1,40 +1,39 @@
 package stepDefinitions;
 
+import io.cucumber.java.en.*;
+import net.bytebuddy.asm.Advice.AssignReturned.Factory;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 
+import BStackDemo.CartPage;
 import BStackDemo.LoginPage;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import PageObject.ProductsPage;
 
-public class AddToCartSteps<ProductsPage> {
-    WebDriver driver;
-    LoginPage loginPage;
-    ProductsPage productsPage;
-    
-    @Given("the user is logged in")
-    public void the_user_is_logged_in() {
-        WebDriverManager.chromedriver().setup();
-        driver = (WebDriver) new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.saucedemo.com/");
-        
-        loginPage = new LoginPage(driver);
-        loginPage.loginToApplication("standard_user", "secret_sauce");
-        
+public class AddToCartSteps extends Factory {
+
+    private LoginPage login;
+    private ProductsPage products;
+    private CartPage cart;
+
+    @Given("I login with {string} and {string}")
+    public void i_login_with_and(String user, String pass, WebDriver driver) {
+        login = new LoginPage(driver);
+        login.open();
+        login.login(user, pass);
+        products = new ProductsPage(driver);
+        Assert.assertTrue(products.isOnProductsPage(), "Login failed!");
     }
 
-    @When("the user adds the {string} to the cart")
-    public void the_user_adds_the_to_the_cart(String productName) {
-        ((Object) productsPage).addBackpackToCart();
+    @When("I add {string} to the cart")
+    public void i_add_to_the_cart(String item) {
+        products.addToCart(item);
+        products.goToCart();
     }
 
-    @Then("the shopping cart icon should show a count of {string}")
-    public void the_shopping_cart_icon_should_show_a_count_of(String expectedCount) {
-        Assert.assertEquals(((Object) productsPage).getCartItemCount(), expectedCount);
-        driver.quit();
+    @Then("the cart should contain {string}")
+    public void the_cart_should_contain(String item, WebDriver driver) {
+        cart = new CartPage(driver);
+        Assert.assertTrue(cart.isProductInCart(item), "Cart does not contain: " + item);
     }
 }

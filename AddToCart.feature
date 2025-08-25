@@ -1,6 +1,6 @@
-Feature: Shopping Cart Functionality
+Feature: Add to cart
 
-Scenario: A logged-in user adds a product to the cart
-  Given the user is logged in
-  When the user adds the "Sauce Labs Backpack" to the cart
-  Then the shopping cart icon should show a count of "1"
+  Scenario: Add Sauce Labs Backpack to cart
+    Given I login with "standard_user" and "secret_sauce"
+    When I add "Sauce Labs Backpack" to the cart
+    Then the cart should contain "Sauce Labs Backpack"
